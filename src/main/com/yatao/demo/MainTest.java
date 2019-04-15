@@ -2,6 +2,7 @@ package com.yatao.demo;
 
 import com.yatao.bean.Person;
 import com.yatao.config.MainConfig;
+import com.yatao.config.MainConfig2;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -26,5 +27,16 @@ public class MainTest {
             System.out.println(beanName);
         }
 
+    }
+
+    @Test
+    public void test02(){
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig2.class);
+        System.out.println("ioc 容器创建完成。。。。。。");
+        Person bean = applicationContext.getBean(Person.class);
+        Person bean1 = applicationContext.getBean(Person.class);
+        System.out.println(bean);
+        System.out.println(bean1);
+        System.out.println(bean == bean1);
     }
 }
