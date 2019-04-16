@@ -74,6 +74,9 @@ public class MainConfig2 {
      *      2. 实现接口 ImportSelector
      *      3. 实现接口 ImportBeanDefinitionRegistrar 手工注册bean到容器中
      *  4.使用 spring 提供的 FactoryBean
+     *      1. 默认获取到的是工厂bean调用getObject创建的对象
+     *      2. 要获取工厂Bean 本身，我们需要给id前面加一个&
+     *
      */
 
     @Bean

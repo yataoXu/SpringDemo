@@ -16,22 +16,34 @@ public class MainTest {
     AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig.class);
     AnnotationConfigApplicationContext applicationContext2 = new AnnotationConfigApplicationContext(MainConfig2.class);
 
-    private void printBeans(AnnotationConfigApplicationContext context){
+    private void printBeans(AnnotationConfigApplicationContext context) {
         String[] beanDefinitionNames = context.getBeanDefinitionNames();
-        for (String beanName : beanDefinitionNames){
+        for (String beanName : beanDefinitionNames) {
             System.out.println(beanName);
         }
     }
 
     @Test
-    public void TestColorFactoryBean(){
-        printBeans(applicationContext2);
+    public void TestColorFactoryBean() {
+//        printBeans(applicationContext2);
         ColorFactoryBean colorBean = applicationContext2.getBean(ColorFactoryBean.class);
-        System.out.println("bean的类型："+colorBean.getClass());
+        //ColorFactoryBean 获得的是调用 gebBean () 产生的对象
+        System.out.println("bean的类型：" + colorBean.getClass());
+
+        Object bean2 = applicationContext2.getBean("colorFactoryBean");
+        Object bean3 = applicationContext2.getBean("colorFactoryBean");
+        System.out.println("bean的类型：" + bean2.getClass());
+        System.out.println(bean2 == bean3);
+
+        Object bean4 = applicationContext2.getBean("&colorFactoryBean");
+        System.out.println(bean4.getClass());
+
+
+
     }
 
     @Test
-    public void testImport(){
+    public void testImport() {
         printBeans(applicationContext2);
 
         Blue blue = applicationContext2.getBean(Blue.class);
@@ -39,9 +51,9 @@ public class MainTest {
     }
 
     @Test
-    public void test03(){
+    public void test03() {
         String[] beanDefinitionNames = applicationContext2.getBeanDefinitionNames();
-        for (String beanName : beanDefinitionNames){
+        for (String beanName : beanDefinitionNames) {
             System.out.println(beanName);
         }
 
@@ -52,7 +64,7 @@ public class MainTest {
     }
 
     @Test
-    public void test01(){
+    public void test01() {
 
         Person bean = applicationContext.getBean(Person.class);
         System.out.println(bean);
