@@ -35,7 +35,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * [7]、给配置类中加 @EnableAspectJAutoProxy 【开启基于注解的aop模式】
  * 		在Spring中很多的 @EnableXXX;
  *
- * 三步：
+ * 实现 AOP 三步：
  * 	1）、将业务逻辑组件和切面类都加入到容器中；告诉Spring哪个是切面类（@Aspect）
  * 	2）、在切面类上的每一个通知方法上标注通知注解，告诉Spring何时何地运行（切入点表达式）
  *  3）、开启基于注解的aop模式；@EnableAspectJAutoProxy
@@ -86,7 +86,11 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * 				4）、BeanPostProcessor(AnnotationAwareAspectJAutoProxyCreator)创建成功；--》aspectJAdvisorsBuilder
  * 			7）、把BeanPostProcessor注册到BeanFactory中；
  * 				beanFactory.addBeanPostProcessor(postProcessor);
- * =======以上是创建和注册AnnotationAwareAspectJAutoProxyCreator的过程========
+ *
+ *
+ *                   =======以上是创建和注册AnnotationAwareAspectJAutoProxyCreator的过程========
+ *
+ *
  *
  * 			AnnotationAwareAspectJAutoProxyCreator => InstantiationAwareBeanPostProcessor
  * 		4）、finishBeanFactoryInitialization(beanFactory);完成BeanFactory初始化工作；创建剩下的单实例bean
@@ -107,8 +111,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * 								拿到所有后置处理器，如果是InstantiationAwareBeanPostProcessor;
  * 								就执行postProcessBeforeInstantiation
  * 							if (bean != null) {
-bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
-}
+                                bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+                                }
  *
  * 					2）、doCreateBean(beanName, mbdToUse, args);真正的去创建一个bean实例；和3.6流程一样；
  * 					3）、
