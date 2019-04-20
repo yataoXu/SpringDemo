@@ -17,6 +17,5 @@ public class IOCTest_Autowired {
 
         //关闭容器
         applicationContext.close();
-
     }
 }

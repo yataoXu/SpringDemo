@@ -21,7 +21,7 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
         boolean red = beanDefinitionRegistry.containsBeanDefinition("com.yatao.bean.Red");
         boolean blue = beanDefinitionRegistry.containsBeanDefinition("com.yatao.bean.Blue");
         if (red && blue) {
-            // 指定bean 的id名
+            // 指定被注册bean 的id名
             RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(RainBow.class);
             beanDefinitionRegistry.registerBeanDefinition("rainBow", rootBeanDefinition);
         }
