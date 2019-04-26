@@ -4,7 +4,7 @@ package com.yatao.bean;
 import org.springframework.stereotype.Component;
 
 //默认加在ioc容器中的组件，容器启动会调用无参构造器创建对象，再进行初始化赋值等操作
-@Component
+//@Component
 public class Boss {
 
 

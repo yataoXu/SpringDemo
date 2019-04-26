@@ -8,7 +8,7 @@ import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringValueResolver;
 
-@Component
+//@Component
 public class Red implements ApplicationContextAware,BeanNameAware,EmbeddedValueResolverAware {
 
     private ApplicationContext applicationContext;

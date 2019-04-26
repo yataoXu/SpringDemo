@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Configuration  // 告诉spring这是一个注册类
 
 //包扫描、只要标注了@Controller、@Service、@Repository，@Component
-//<context:component-scan base-package="com.atguigu" use-default-filters="false"></context:component-scan>
+//<context:component-scan base-package="com.yatao" use-default-filters="false"></context:component-scan>
 //@ComponentScan
 
 

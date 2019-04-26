@@ -4,6 +4,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -14,8 +15,8 @@ import javax.annotation.PreDestroy;
  * @ Date : Crreate in 2019/4/17 10:44
  * @Mail : xuyt@zendaimoney.com
  */
-@Component
-public class Dog implements ApplicationContextAware {
+@Service
+public class Dog {//implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -33,8 +34,4 @@ public class Dog implements ApplicationContextAware {
         System.out.println("dog constructor ....preDestroy....");
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 }

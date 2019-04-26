@@ -66,19 +66,20 @@ public class MainTest {
     @Test
     public void test01() {
 
-        Person bean = applicationContext.getBean(Person.class);
-        System.out.println(bean);
+        printBeans(applicationContext);
+//        Person bean = applicationContext.getBean(Person.class);
+//        System.out.println(bean);
 
-        String[] beanNamesForType = applicationContext.getBeanNamesForType(Person.class);
-        for (String beanName : beanNamesForType) {
-            System.out.println(beanName);
-        }
-
-        System.out.println("====================");
-        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
-        for (String beanName : beanDefinitionNames) {
-            System.out.println(beanName);
-        }
+//        String[] beanNamesForType = applicationContext.getBeanNamesForType(Person.class);
+//        for (String beanName : beanNamesForType) {
+//            System.out.println(beanName);
+//        }
+//
+//        System.out.println("====================");
+//        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
+//        for (String beanName : beanDefinitionNames) {
+//            System.out.println(beanName);
+//        }
 
     }
 
