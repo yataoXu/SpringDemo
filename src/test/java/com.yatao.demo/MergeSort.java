@@ -2,6 +2,9 @@ package com.yatao.demo;
 
 import java.util.Arrays;
 
+/**
+ * 归并排序
+ */
 public class MergeSort {
 
     public static void main(String[] args) {
@@ -14,7 +17,7 @@ public class MergeSort {
 //        array = insertionSort(array);
         array = mergesSort(array);
         System.out.println("-----------------------");
-        System.out.println("经过冒泡排序后的数组顺序为：");
+        System.out.println("经过排序后的数组顺序为：");
         display(array);
     }
 
