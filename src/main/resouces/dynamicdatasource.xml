@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+	</bean>
+		<bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+	</bean>
+
+	<bean id="multiDataSource" class="com.wbb.dataSource.MultiDataSource">
+		<property name="defaultTargetDataSource" ref="dataSource"></property>
+		<property name="targetDataSources">
+			<map>
+				<entry key="dataSource1" value-ref="dataSource1"></entry>
+			</map>
+		</property>
+	</bean>
+</beans>
