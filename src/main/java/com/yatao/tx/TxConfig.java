@@ -68,7 +68,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @Configuration
 public class TxConfig {
 
-    //数据源
+    //数
     @Bean
     public DataSource dataSource() throws Exception{
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
