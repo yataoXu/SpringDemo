@@ -1,7 +1,7 @@
 Spring 源码阅读笔记
 
 启动代码
-```
+```java
 @Test
 public void test01() {
 ClassPathXmlApplicationContext applicationContext  = new ClassPathXmlApplicationContext("spring-config.xml");
@@ -58,14 +58,14 @@ public ClassPathXmlApplicationContext(
 
 
 一直为空 ，最后 执行了
-```
+```java
 private final Object beanFactoryMonitor = new Object();
 ```
 
 
 
 以下是`AbstractApplicationContext`中的代码调用
-```
+```java
 /**
  * Create a new AbstractApplicationContext with no parent.
  */
@@ -100,7 +100,7 @@ protected ResourcePatternResolver getResourcePatternResolver() {
 - 设置`AbstractRefreshableConfigApplicationContext`类中的`configLocations`属性  
 
 代码如下:
-```
+```java
 public abstract class AbstractRefreshableConfigApplicationContext extends AbstractRefreshableApplicationContext
 		implements BeanNameAware, InitializingBean {
 
@@ -137,7 +137,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 
 ---
 
-##### refresh()
+#### refresh()
 
 <font color = 'green'> 返回静态指定的ApplicationListeners的列表。</font>
 
@@ -146,7 +146,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 这里我们从`ClassPathXmlApplicationContext.class`走进了`AbstractApplicationContext.class`
 
 org.springframework.context.support.AbstractApplicationContext#refresh
-```
+```java
 // AbstractApplicationContext
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
@@ -231,12 +231,12 @@ org.springframework.context.support.AbstractApplicationContext#refresh
 
 ---
 
-##### prepareRefresh()
+#### prepareRefresh()
 
 <font color = 'green'>准备，记录容器的启动时间startupDate, 标记容器为激活，初始化上下文环境如文件路径信息，验证必填属性是否填写。</font>
 
 
-```
+```java
 // AbstractApplicationContext
 
 /**
@@ -265,7 +265,6 @@ protected void prepareRefresh() {
 
 ---
 
-
 这里先附上一份PropertyResolver结构图  
 ![PropertyResolver结构图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQDceFkqMQNqLePnkOXY12WkGrVdL8gdd9PuKH7vCIHnV474edNJf20g/0?wx_fmt=png)  
 
@@ -275,7 +274,7 @@ protected void prepareRefresh() {
 
 我们分析以下`getEnvironment().validateRequiredProperties();`的调用。  
 
-```
+```java
 // AbstractApplicationContext
 
 // 首先我们看下`getEnviorment()`方法
@@ -300,7 +299,7 @@ protected ConfigurableEnvironment createEnvironment() {
 
 ```
 然后就是`validateRequiredProperties()`方法  
-```
+```java
 
 //org.springframework.core.env.AbstractEnvironment#validateRequiredProperties()`中
 
@@ -317,7 +316,8 @@ public void validateRequiredProperties() throws MissingRequiredPropertiesExcepti
 ```
 在图中你可以找到`PropertySourcesPropertyResolver`  
 这里最终进入其父类`AbstractPropertyResolver`中
-```
+
+```java
 // AbstractPropertyResolver
 
 private final Set<String> requiredProperties = new LinkedHashSet<>();
@@ -341,12 +341,12 @@ public void validateRequiredProperties() {
 
 ---
 
-##### obtainFreshBeanFactory()
+####   obtainFreshBeanFactory()
 
 <font color ='green'>初始化beanFactory，注册Bean</font>
 
 
-```
+```java
 // AbstractApplicationContext
 
 //Tell the subclass to refresh the internal bean factory.
@@ -366,7 +366,7 @@ protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 
 代码走读到`AbstractRefreshableApplicationContext#refreshBeanFactory()`中
 
-```
+```java
 // AbstractRefreshableApplicationContext
 
 /**
@@ -410,7 +410,7 @@ protected DefaultListableBeanFactory createBeanFactory() {
 跨过对`beanFactory`的属性设置,我们转进到`loadBeanDefinitions(DefaultListableBeanFactory)`看一下。
 
 
-```
+```java
 // AbstractXmlApplicationContext
 
 /**
@@ -444,7 +444,7 @@ protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throw
 
 ```
 
-```
+```java
 // AbstractXmlApplicationContext
 
 // 使用给定的XmlBeanDefinitionReader加载bean definitions 。
@@ -465,7 +465,7 @@ protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansE
 
 ```
 
-```
+```java
 // AbstractXmlApplicationContext
 
     /**
@@ -484,7 +484,7 @@ protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansE
 
 
  关于 new XmlBeanDefinitionReader(beanFactory) 的调用过程
-```
+```java
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     
     // Create new XmlBeanDefinitionReader for the given bean factory
@@ -494,7 +494,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 ```
 
-```
+```java
 // AbstractBeanDefinitionReader
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader, EnvironmentCapable {
 
@@ -524,12 +524,11 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 
 
-
 附上一份XmlBeanDefinitionReader类关系结构图  
 ![XmlBeanDefinitionReader类关系结构图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQXLmght2UeGOsZAut3SbYQUYjW3libsJzZj6vYaqvT3mvVmXOoPKwhaQ/0?wx_fmt=png)
 
 跟进到`AbstractBeanDefinitionReader#loadBeanDefinitions`中
-```
+```java
 public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
     // 这里就是获取到 ClassPathXmlApplicationContext 的实例。 
     // (通过 'beanDefinitionReader.setResourceLoader(this)' 设置的)
@@ -573,10 +572,11 @@ public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualRe
 }
 ```
 对`Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location)`分析
-```
+```java
 // 先跟进 AbstractApplicationContext#getResources(String)
 
 //AbstractApplicationContext
+// 将给定的位置模式解析为资源对象。
 @Override
 public Resource[] getResources(String locationPattern) throws IOException {
     // 这里的 resourcePatternResolver 
@@ -619,7 +619,7 @@ public Resource[] getResources(String locationPattern) throws IOException {
 }
 ```
 这里最后看下`DefaultResourceLoader#getResource(String)`的代码
-```
+```java
 // DefaultResourceLoader
 
 @Override
@@ -694,8 +694,14 @@ public ClassPathResource(String path, @Nullable ClassLoader classLoader) {
 ![ClassPathContextResource类结构关系图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQ9mFFkrRueYibY9wvYkicTUmoQu45Mr9fxWLC6fiapIToEBBCianHTGibzSA/0?wx_fmt=png)
 
 回到`AbstractBeanDefinitionReader#loadBeanDefinitions(String, Set<Resource>)`中看下一行`loadBeanDefinitions(Resource[])`  
+
+**以上是对资源文件的加载**
+
+**下面将资源文件成document对象**
+
 这里会真正进入到`XmlBeanDefinitionReader.class`中,具体过程不贴了,只贴最终位置
-```
+
+```java
 // XmlBeanDefinitionReader
 
 // 这里的EncodedResource我暂时理解的就是Resource的一个装饰者...
@@ -732,7 +738,7 @@ public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefin
 }
 ```
 
-```
+```java
 //真正的从指定的XML文件加载bean定义。
 protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
             throws BeanDefinitionStoreException {
@@ -750,10 +756,20 @@ protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
 
     // ...
 }
-// 注册给定DOM文档中包含的bean定义。由{@code loadBeanDefinitions}调用。<p>创建解析器类的新实例，并对其调用{@code registerBeanDefinitions}。
+
+```
+**注册给定DOM文档中包含的bean定义**
+
+```java 
+/** 注册给定DOM文档中包含的bean定义。由{@code loadBeanDefinitions}调用。
+*<p>创建解析器类的新实例，并对其调用{@code registerBeanDefinitions}。
+**/
 public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
-    // 获取到一个 DefaultBeanDefinitionDocumentReader 的实例。
-    // BeanDefinitionDocumentReader 接口中 只有一个 registerBeanDefinitions(Document, XmlReaderContext) 方法
+    /**
+    * 获取到一个 DefaultBeanDefinitionDocumentReader 的实例。
+    * BeanDefinitionDocumentReader 接口中 
+    * 只有一个 registerBeanDefinitions(Document, XmlReaderContext) 方法
+    **/
     BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
     int countBefore = getRegistry().getBeanDefinitionCount();
     
@@ -790,7 +806,7 @@ protected NamespaceHandlerResolver createDefaultNamespaceHandlerResolver() {
 }
 ```
 我们回到上面的`documentReader.registerBeanDefinitions`方法继续分析  
-```
+```java
 // DefaultBeanDefinitionDocumentReader
 
 public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
@@ -941,7 +957,7 @@ public boolean isDefaultNamespace(Node node) {
 }
 ```
 开始分析`delegate.parseBeanDefinitionElement(ele)`方法调用过程中的热点代码
-```
+```java
 // 用于解析XML bean定义的状态委托类。主要解析器和任何扩展都可以使用
 // BeanDefinitionParserDelegate
 
@@ -1119,7 +1135,7 @@ public Object parsePropertyValue(Element ele, BeanDefinition bd, @Nullable Strin
 
 
 #### `component-scan`的说明开始
-```
+```java 
 // 首先, 你需要再xml里面配置一个 <context:component-scan base-package="a.b.c"/>
 
 // 在上述代码的基础上代码追踪, 到如下部分截至并对截至部分进行分析
@@ -1143,13 +1159,13 @@ public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition c
 }
 ```
 这里提醒一下, 看一下 DefaultNamespaceHandlerResolver 的构造方法, 它和如下的属性声明有一定关系
-```
+```java
 public static final String DEFAULT_HANDLER_MAPPINGS_LOCATION = "META-INF/spring.handlers";
 
 ```
 
 然后你可以自己进入spring.handlers文件看一下 （context、aop、beans中的汇总  甚至包括mvc的（如果你引入mvc的包的话..））
-```
+```java
 // DefaultNamespaceHandlerResolver
 // this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri) 的内部代码
 @Override
@@ -1227,7 +1243,7 @@ public class ContextNamespaceHandler extends NamespaceHandlerSupport {
     2. 根据目标类实例化展开一些列的解析 (这个部分这里不讲, 和本文内容有点不想管)
 ```
 **补充: 这里补充一下关于aop的xml解析, 因为我写到后面发现这里还是要说一下的。**
-```
+```jav
 // NamespaceHandlerSupport
 
 // 与@ComponentScan一样也是通过`parseBeanDefinitionElement(ele)`进入的,并且使用的是`spring.handlers`文件中的`AopNamespaceHandler`进行的处理
@@ -1383,7 +1399,7 @@ private static BeanDefinition registerOrEscalateApcAsRequired(
 ---
 
 回到最上面的`refresh()`方法,再看下一行`prepareBeanFactory(beanFactory);`
-```
+```java
 protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
     // Tell the internal bean factory to use the context's class loader etc.
     beanFactory.setBeanClassLoader(getClassLoader());
@@ -1479,7 +1495,7 @@ protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 一个是`org.springframework.context.annotation.internalAutowiredAnnotationProcessor`一个是`org.springframework.context.annotation.internalCommonAnnotationProcessor`。  
 
 下面详细看一下`registerBeanPostProcessors`方法  
-```
+```java
 public static void registerBeanPostProcessors(
         ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
     // 如果你使用我的demo项目, 调试的时候会看到这里有3个值
@@ -1581,7 +1597,7 @@ public static void registerBeanPostProcessors(
 
 ---
 再往下一步,`initMessageSource()`
-```
+```java
 // AbstractApplicationContext
 protected void initMessageSource() {
     ConfigurableListableBeanFactory beanFactory = getBeanFactory();
@@ -1645,7 +1661,7 @@ registerListeners
 ---
 继续`finishBeanFactoryInitialization(beanFactory);`这个是个重点  
 原注释'Instantiate all remaining (non-lazy-init) singletons.'  
-```
+```java
 // AbstractApplicationContext
 protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
     // Initialize conversion service for this context. （初始化上下文的'ConversionService'）
@@ -1767,7 +1783,7 @@ public void preInstantiateSingletons() throws BeansException {
 ```
 我们分析过了`preInstantiateSingletons()`方法发现其中最重要的还是一个`getBean(..)`  
 下面分析下内部的实现  
-```
+```java
 // AbstractBeanFactory
 
 @Override
@@ -1971,7 +1987,7 @@ protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredTy
 
 ```
 先来分析下`getSingleton(String, ObjectFactory<?>)`, 第二个参数是函数式编程的写法。
-```
+```java
 // DefaultSingletonBeanRegistry
 
 public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
@@ -2066,7 +2082,7 @@ protected void addSingleton(String beanName, Object singletonObject) {
 `getSingleton(String, ObjectFactory<?>)`结束了, 我们看到它获取单例的方式:先从`singletonObjects`中获取, 如果没有就通过调用`singletonFactory.getObject()`进行创建。
 
 接下来分析一下`createBean`方法
-```
+```java
 // AbstractAutowireCapableBeanFactory
 protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
             throws BeanCreationException {
@@ -2133,7 +2149,7 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
 关于`InstantiationAwareBeanPostProcessor`这个东西,在本文不做阐述。自己搜下吧(其实看接口方法名称也能有个大概意思)。  
 
 接着分析最后的`doCreateBean(beanName, mbdToUse, args)`方法 (真正的创建Bean的地方)  
-```
+```java
 // AbstractAutowireCapableBeanFactory
 protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
         throws BeanCreationException {
@@ -2247,7 +2263,7 @@ protected Object doCreateBean(final String beanName, final RootBeanDefinition mb
 }
 ```
 对`createBeanInstance`方法的分析,首先对名字分析可以得出方法的作用
-```
+```java
 // 这个方法就是用来将beanClass实例化的(不会对参数赋值的那种)
 protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
     // Make sure bean class is actually resolved at this point.
@@ -2372,7 +2388,7 @@ protected BeanWrapper obtainFromSupplier(Supplier<?> instanceSupplier, String be
 }
 ```
 `populateBean`方法分析
-```
+```java
 // 使用BeanDefinition中的属性值填充给BeanWrapper中的bean实例
 protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw) {
     // 一个先行的校验 确保传入的BeanWrapper不为空
@@ -2479,7 +2495,7 @@ protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable B
 }
 ```
 `initializeBean`方法的分析
-```
+```java
 protected Object initializeBean(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd) {
     if (System.getSecurityManager() != null) {
         AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
@@ -2539,7 +2555,7 @@ public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, St
 最后我们了解一下如何使用`AspectJAwareAdvisorAutoProxyCreator`来实现代理。 
 在上文中提到`applyBeanPostProcessorsAfterInitialization`方法是aop的入口,但是该类并未实现该方法,只能去父类中找。
 最终在`AbstractAutoProxyCreator`类中可以找到实习。
-```
+```java
 @Override
 public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
     if (bean != null) {
@@ -2582,7 +2598,7 @@ protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) 
 }
 ```
 这里稍微深入看一下`getAdvicesAndAdvisorsForBean`方法,进入到`AbstractAdvisorAutoProxyCreator.class`的实现中
-```
+```java
 @Override
 @Nullable
 protected Object[] getAdvicesAndAdvisorsForBean(
@@ -2638,7 +2654,7 @@ public static List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvi
 }
 ```
 继续分析`createProxy`方法
-```
+```java
 // 当前位于AbstractAutoProxyCreator.class中
 /**
  * Create an AOP proxy for the given bean.
@@ -2693,7 +2709,7 @@ protected Object createProxy(Class<?> beanClass, @Nullable String beanName,
 }
 ```
 开始分析`getProxy`方法
-```
+```java
 // 该方法位于ProxyFactory.class
 public Object getProxy(@Nullable ClassLoader classLoader) {
     return createAopProxy().getProxy(classLoader);
