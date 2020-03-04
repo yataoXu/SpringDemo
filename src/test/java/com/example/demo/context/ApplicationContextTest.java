@@ -7,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class ApplicationContextTest {
     @Test
     public void analysis() {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"spring-config.xml"}, true, null);
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
 
         String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
         for (String beanDefinitionName : beanDefinitionNames) {

@@ -12,7 +12,7 @@ helloService.sayHello();
 ![ClassPathXmlApplicationContext类结构图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQeoh04ZiaJSP8KzehexJJUPaCZOlUqlLwvI1xKW5eXbibUCY0Oic3icOfZQ/0?wx_fmt=png) 这张图后续将多次提到  
 
 先看一下`ClassPathXmlApplicationContext`的构造方法
-```
+```java
 /**
  * Create a new ClassPathXmlApplicationContext, loading the definitions
  * from the given XML file and automatically refreshing the context.
@@ -44,6 +44,8 @@ public ClassPathXmlApplicationContext(
     super(parent);
 
     // 这里的主要作用是设置AbstractRefreshableConfigApplicationContext类中的(String[] )configLocations属性
+    // 解析给定的路径，必要时用相应的环境属性值替换占位符。应用于配置位置。
+    // configLocations= "spring-config.xml"
     setConfigLocations(configLocations);
     if (refresh) {
         // 这里是核心点
@@ -52,6 +54,15 @@ public ClassPathXmlApplicationContext(
 }
 ```
 先看一下`super(parent);`, 如果你跟下去就会发现它途经`AbstractXmlApplicationContext`、`AbstractRefreshableConfigApplicationContext`、`AbstractRefreshableApplicationContext`直到`AbstractApplicationContext`类(按照结构图不断上溯)。
+
+
+
+一直为空 ，最后 执行了
+```
+private final Object beanFactoryMonitor = new Object();
+```
+
+
 
 以下是`AbstractApplicationContext`中的代码调用
 ```
@@ -90,22 +101,47 @@ protected ResourcePatternResolver getResourcePatternResolver() {
 
 代码如下:
 ```
-// AbstractRefreshableConfigApplicationContext
-public void setConfigLocations(@Nullable String... locations) {
-    if (locations != null) {
-        Assert.noNullElements(locations, "Config locations must not be null");
-        this.configLocations = new String[locations.length];
-        for (int i = 0; i < locations.length; i++) {
-            // 这里
-            this.configLocations[i] = resolvePath(locations[i]).trim();
+public abstract class AbstractRefreshableConfigApplicationContext extends AbstractRefreshableApplicationContext
+		implements BeanNameAware, InitializingBean {
+
+	private String[] configLocations;
+	
+	// 主要是为configLocations 赋值,将ClassPathXmlApplicationContext("spring-config.xml")中的xml赋值给
+	// configLocations
+
+    public void setConfigLocations(@Nullable String... locations) {
+        if (locations != null) {
+            Assert.noNullElements(locations, "Config locations must not be null");
+            this.configLocations = new String[locations.length];
+            for (int i = 0; i < locations.length; i++) {
+                // 这里
+                this.configLocations[i] = resolvePath(locations[i]).trim();
+            }
+        }
+        else {
+            this.configLocations = null;
         }
     }
-    else {
-        this.configLocations = null;
-    }
-}
 ```
 
+
+
+---
+
+在开始之前，先介绍一个整体的概念。即spring ioc容器的加载，大体上经过以下几个过程：
+- 资源文件定位
+- 解析
+- 注册
+- 实例化
+- 赋值
+
+---
+
+##### refresh()
+
+<font color = 'green'> 返回静态指定的ApplicationListeners的列表。</font>
+
+---
 然后我们开始关注`refresh()`这个核心点  
 这里我们从`ClassPathXmlApplicationContext.class`走进了`AbstractApplicationContext.class`
 
@@ -199,16 +235,14 @@ org.springframework.context.support.AbstractApplicationContext#refresh
 
 <font color = 'green'>准备，记录容器的启动时间startupDate, 标记容器为激活，初始化上下文环境如文件路径信息，验证必填属性是否填写。</font>
 
----
 
-
-这里先附上一份PropertyResolver结构图  
-![PropertyResolver结构图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQDceFkqMQNqLePnkOXY12WkGrVdL8gdd9PuKH7vCIHnV474edNJf20g/0?wx_fmt=png)  
-
-先看`org.springframework.context.support.AbstractApplicationContext#prepareRefresh()`
 ```
-// AbstractApplicationContext(表示内容位于该类中, 如果有特殊的将会在方法上标明)
+// AbstractApplicationContext
 
+/**
+ * Prepare this context for refreshing, setting its startup date and
+ * active flag as well as performing any initialization of property sources.
+ */
 protected void prepareRefresh() {
     // ... 
 
@@ -218,6 +252,7 @@ protected void prepareRefresh() {
 
     // 看下这行代码, 下面贴出了'getEnvironment()'的代码和分析
     // Validate that all properties marked as required are resolvable
+    // 验证标记为所需的所有属性都是可解析的
     // see ConfigurablePropertyResolver#setRequiredProperties
     getEnvironment().validateRequiredProperties();
 
@@ -227,8 +262,18 @@ protected void prepareRefresh() {
     this.earlyApplicationEvents = new LinkedHashSet<>();
 }
 ```
-我们分析以下`getEnvironment().validateRequiredProperties();`的调用。  
 
+---
+
+
+这里先附上一份PropertyResolver结构图  
+![PropertyResolver结构图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQDceFkqMQNqLePnkOXY12WkGrVdL8gdd9PuKH7vCIHnV474edNJf20g/0?wx_fmt=png)  
+
+
+
+
+
+我们分析以下`getEnvironment().validateRequiredProperties();`的调用。  
 
 ```
 // AbstractApplicationContext
@@ -253,12 +298,12 @@ protected ConfigurableEnvironment createEnvironment() {
     return new StandardEnvironment();
 }
 
-// 然后就是`validateRequiredProperties()`方法  
-// 通过上面的结构图,我们能跟进到`org.springframework.core.env.AbstractEnvironment#validateRequiredProperties()`中
-
+```
+然后就是`validateRequiredProperties()`方法  
 ```
 
-```
+//org.springframework.core.env.AbstractEnvironment#validateRequiredProperties()`中
+
 // AbstractEnvironment 
 private final ConfigurablePropertyResolver propertyResolver =
             new PropertySourcesPropertyResolver(this.propertySources);
@@ -296,17 +341,15 @@ public void validateRequiredProperties() {
 
 ---
 
-#### obtainFreshBeanFactory()
+##### obtainFreshBeanFactory()
 
 <font color ='green'>初始化beanFactory，注册Bean</font>
 
----
 
-然后第二行代码`obtainFreshBeanFactory()`分析开始
-
-org.springframework.context.support.AbstractApplicationContext#obtainFreshBeanFactory
 ```
 // AbstractApplicationContext
+
+//Tell the subclass to refresh the internal bean factory.
 protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
     // 这个地方是关键
     refreshBeanFactory();
@@ -315,15 +358,25 @@ protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
     return getBeanFactory(); 
 }
 ```
-根据类结构图,我们跟进到`AbstractRefreshableApplicationContext#refreshBeanFactory()`中
+
+---
+
+然后第二行代码`obtainFreshBeanFactory()`分析开始
+
+
+代码走读到`AbstractRefreshableApplicationContext#refreshBeanFactory()`中
+
 ```
+// AbstractRefreshableApplicationContext
+
 /**
  * This implementation performs an actual refresh of this context's underlying
  * bean factory, shutting down the previous bean factory (if any) and
  * initializing a fresh bean factory for the next phase of the context's lifecycle.
  */
 
-// 此实现执行此上下文的底层bean工厂的实际刷新，关闭前一个bean工厂（如果有的话）并为上下文生命周期的下一阶段初始化一个新的bean工厂。
+// 此实现执行此上下文的底层bean工厂的实际刷新，关闭前一个bean工厂（如果有的话）
+// 并为上下文生命周期的下一阶段初始化一个新的bean工厂。
 @Override
 protected final void refreshBeanFactory() throws BeansException {
     if (hasBeanFactory()) {
@@ -349,23 +402,24 @@ protected final void refreshBeanFactory() throws BeansException {
 }
 
 protected DefaultListableBeanFactory createBeanFactory() {
-    // getInternalParentBeanFactory() 理解为null就行了, 我没去深入理解。
+    // getInternalParentBeanFactory() 理解为null就行了
     // 默认使用 DefaultListableBeanFactory 类。
     return new DefaultListableBeanFactory(getInternalParentBeanFactory());
 }
 ```
 跨过对`beanFactory`的属性设置,我们转进到`loadBeanDefinitions(DefaultListableBeanFactory)`看一下。
 
-`org.springframework.context.support.AbstractXmlApplicationContext#loadBeanDefinitions(org.springframework.beans.factory.support.DefaultListableBeanFactory)`
 
 ```
+// AbstractXmlApplicationContext
+
 /**
  * Loads the bean definitions via an XmlBeanDefinitionReader.
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  * @see #initBeanDefinitionReader
  * @see #loadBeanDefinitions
  */
-// 通过XmlBeanDefinitionReader加载bean定义。
+// 通过XmlBeanDefinitionReader加载bean definitions 
 @Override
 protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
     // 这里你需要留意以下 XmlBeanDefinitionReader 的构造方法'XmlBeanDefinitionReader(BeanDefinitionRegistry)',下面贴了下代码
@@ -380,28 +434,39 @@ protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throw
     // ResourceEntityResolver 仅仅对 ResourceLoader 进行了一个包装
     beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
-    // 这个方法是对 beanDefinitionReader 设置了一个其他属性  -> reader.setValidating(this.validating); -> [validating 默认为 true]
+    // 这个方法是对 beanDefinitionReader 设置了一个其他属性 
+    // -> reader.setValidating(this.validating); -> [validating 默认为 true]
     initBeanDefinitionReader(beanDefinitionReader);
 
     // 这个是要点,方法代码放在下面
     loadBeanDefinitions(beanDefinitionReader);
 }
 
+```
 
+```
+// AbstractXmlApplicationContext
 
-// 使用给定的XmlBeanDefinitionReader加载bean定义。<p>bean工厂的生命周期由{@link#refreshBeanFactory}方法处理；因此该方法只需加载或注册bean定义。
+// 使用给定的XmlBeanDefinitionReader加载bean definitions 。
+// <p>bean工厂的生命周期由{@link#refreshBeanFactory}方法处理；因此该方法只需加载或注册bean definitions 。
 protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
     Resource[] configResources = getConfigResources();
     if (configResources != null) {
         reader.loadBeanDefinitions(configResources);
     }
     // 这里获取的就是上面调用 setConfigLocations 方法设置的 configLocations
+    // 其实就是 spring-config.xml
     String[] configLocations = getConfigLocations();
     if (configLocations != null) {
         // 可以看到是调用的 XmlBeanDefinitionReader 实例的 loadBeanDefinitions 方法,下面继续分析它。
         reader.loadBeanDefinitions(configLocations);
     }
 }
+
+```
+
+```
+// AbstractXmlApplicationContext
 
     /**
     * 返回一个资源位置数组，引用XML bean定义
@@ -413,7 +478,12 @@ protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansE
 	}
 
 ```
-###### 关于 new XmlBeanDefinitionReader(beanFactory) 的调用过程
+
+首先getResourceLoader()的实现的前提条件是因为XmlBeanDefinitionReader在实例化的时候已经确定了创建了实例ResourceLoader实例, 代码位于 AbstractBeanDefinitionReader
+
+
+
+ 关于 new XmlBeanDefinitionReader(beanFactory) 的调用过程
 ```
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
     
@@ -425,6 +495,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 ```
 
 ```
+// AbstractBeanDefinitionReader
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader, EnvironmentCapable {
 
     protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
@@ -450,13 +521,18 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
     }
 }
 ```
+
+
+
+
 附上一份XmlBeanDefinitionReader类关系结构图  
 ![XmlBeanDefinitionReader类关系结构图](https://mmbiz.qpic.cn/mmbiz_png/vb4xFWPs1FghW3ryFiaVy85rGlfuqCAibQXLmght2UeGOsZAut3SbYQUYjW3libsJzZj6vYaqvT3mvVmXOoPKwhaQ/0?wx_fmt=png)
 
 跟进到`AbstractBeanDefinitionReader#loadBeanDefinitions`中
 ```
 public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
-    // 这里就是获取到 ClassPathXmlApplicationContext 的实例。 (通过 'beanDefinitionReader.setResourceLoader(this)' 设置的)
+    // 这里就是获取到 ClassPathXmlApplicationContext 的实例。 
+    // (通过 'beanDefinitionReader.setResourceLoader(this)' 设置的)
     ResourceLoader resourceLoader = getResourceLoader();
     if (resourceLoader == null) {
         throw new BeanDefinitionStoreException(
@@ -654,7 +730,9 @@ public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefin
         }
     }
 }
+```
 
+```
 //真正的从指定的XML文件加载bean定义。
 protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
             throws BeanDefinitionStoreException {
@@ -1030,9 +1108,12 @@ public Object parsePropertyValue(Element ele, BeanDefinition bd, @Nullable Strin
 ```
 至此`ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();`分析结束了。  
 
-到这里你会注意到其实 xml 中 `<bean/>` 的解析和注册(**并没有实例化对象和赋值**)已经完成了。  
+到这里你会注意到其实 xml 中 `<bean/>` 的**解析和注册** (**并没有实例化对象和赋值**)已经完成了。 
+
+
 
 ---
+
 
 我们上面说了对于`component-scan`和`aop-config`进行下分析..下面就开始了。  
 
@@ -1062,7 +1143,11 @@ public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition c
 }
 ```
 这里提醒一下, 看一下 DefaultNamespaceHandlerResolver 的构造方法, 它和如下的属性声明有一定关系
+```
 public static final String DEFAULT_HANDLER_MAPPINGS_LOCATION = "META-INF/spring.handlers";
+
+```
+
 然后你可以自己进入spring.handlers文件看一下 （context、aop、beans中的汇总  甚至包括mvc的（如果你引入mvc的包的话..））
 ```
 // DefaultNamespaceHandlerResolver
@@ -1293,7 +1378,8 @@ private static BeanDefinition registerOrEscalateApcAsRequired(
 
 ##### prepareBeanFactory(beanFactory)
 
-<font color = 'red'> 设置beanFactory类加载器，添加多个beanPostProcesser </font>
+<font color = 'green'> 设置beanFactory类加载器，添加多个beanPostProcesser </font>
+
 ---
 
 回到最上面的`refresh()`方法,再看下一行`prepareBeanFactory(beanFactory);`
@@ -1357,6 +1443,10 @@ protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 **2.关于`BeanPostProcessor`的简单描述**    
 单说该接口内的方法..都是在最下面`initializeBean`方法中调用的。(实际在 Bean 创建完成后   InitializeBean 接口方法调用前后)  
 
+---
+##### postProcessBeanFactory(beanFactory)
+
+---
 
 然后目光转向`postProcessBeanFactory(beanFactory)`,这是对`BeanFactory`的 PostProcess, 可以自己定义实现。  
 由于`ClassPathXmlApplicationContext`和`AnnotationConfigApplicationContext`都没有其具体实现,所以我并不关注。  
@@ -1366,16 +1456,16 @@ protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 它的工作时机是在所有的`BeanDefinition`加载完成之后,`Bean`实例化之前。  
 在此之间,你可以通过自己的代码实现,对`BeanFactory`本身和其内部数据进行一些你想要的操作。  
 
-
 ---
-##### invokeBeanFactoryPostProcessors
+##### invokeBeanFactoryPostProcessors(beanFactory)
+
 ---
 
 再往下看`invokeBeanFactoryPostProcessors(beanFactory)`,这个看名称大致知道作用, 有时间以后补上。
 
-
 ---
-##### registerBeanPostProcessors
+##### registerBeanPostProcessors(beanFactory);
+
 ---
 
 再往下`registerBeanPostProcessors(beanFactory);`。  
@@ -1487,7 +1577,8 @@ public static void registerBeanPostProcessors(
 
 
 ---
-##### initMessageSource
+##### initMessageSource()
+
 ---
 再往下一步,`initMessageSource()`
 ```
@@ -1528,27 +1619,26 @@ protected void initMessageSource() {
 里面仅仅是将`DelegatingMessageSource`实例化后赋值给`this.messageSource`,然后注册成单例。  
 
 ---
-##### initApplicationEventMulticaster
+##### initApplicationEventMulticaster()
+
 ---
 
 再下一步`initApplicationEventMulticaster();`,这个和上一步一样。  
 实例化`SimpleApplicationEventMulticaster.class`赋给`this.applicationEventMulticaster`然后注册成单例。  
 这两步的2个类有什么作用就靠自己去发掘了,这里不写了。  
 
-
 ---
-###### onRefresh
+###### onRefresh()
+
 ---
 
 再下一步的`onRefresh();`是个空实现且没有子类实现,直接跳过。
-
 
 ---
 registerListeners
 ---
 
 再下一步`registerListeners()`,注册监听者。本文中的代码并没有这玩意,里面其实一个都不走。我大致知道含义,但是不确定对不对,自己研究吧。
-
 
 ---
 ##### finishBeanFactoryInitialization
@@ -2658,10 +2748,13 @@ CGLIB： 不受必须实现接口的限制,但对于final方法无法代理
 
 最后的`AbstractApplicationContext#finishRefresh()`方法就不提了
 
+---
+
 上述全部,说了点上面?
 主要关注点:
-1.首先创建BeanFactory
-2.其次通过不同种的ApplicationContext实现解读不同的元数据(解读成BeanDefinition)并注册
-3.然后实例化BeanDefinition(这时候还没有赋值)
-4.填充数据
-5.判断是否创建代理
+
+1. 首先创建BeanFactory
+2. 其次通过不同种的ApplicationContext实现解读不同的元数据(解读成BeanDefinition)并注册
+3. 然后实例化BeanDefinition(这时候还没有赋值)
+4. 填充数据
+5. 判断是否创建代理
