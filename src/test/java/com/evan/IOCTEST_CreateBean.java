@@ -1,6 +1,6 @@
 package com.evan;
 
-import com.yatao.bean.CreateBeanProcess;
+import com.evan.bean.CreateBeanProcess;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

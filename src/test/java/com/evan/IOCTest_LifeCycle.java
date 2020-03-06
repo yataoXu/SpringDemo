@@ -1,6 +1,6 @@
 package com.evan;
 
-import com.yatao.bean.Car;
+import com.evan.bean.Car;
 import com.evan.config.MainConfigOfLifeCycle;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

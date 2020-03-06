@@ -1,8 +1,8 @@
 package com.evan;
 
-import com.yatao.bean.Blue;
-import com.yatao.bean.ColorFactoryBean;
-import com.yatao.bean.Person;
+import com.evan.bean.Blue;
+import com.evan.bean.ColorFactoryBean;
+import com.evan.bean.Person;
 import com.evan.config.MainConfig;
 import com.evan.config.MainConfig2;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.env.ConfigurableEnvironment;
 
 
-public class MainTest {
+public class MainTest01 {
 
 
     AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig.class);
@@ -24,7 +24,7 @@ public class MainTest {
     }
 
     @Test
-    public void TestColorFactoryBean() {
+    public void Test05() {
 //        printBeans(applicationContext2);
         ColorFactoryBean colorBean = applicationContext2.getBean(ColorFactoryBean.class);
         //ColorFactoryBean 获得的是调用 gebBean () 产生的对象
@@ -39,11 +39,10 @@ public class MainTest {
         System.out.println(bean4.getClass());
 
 
-
     }
 
     @Test
-    public void testImport() {
+    public void test04() {
         printBeans(applicationContext2);
 
         Blue blue = applicationContext2.getBean(Blue.class);
@@ -63,33 +62,34 @@ public class MainTest {
         System.out.println(property);
     }
 
-    @Test
-    public void test01() {
-
-        printBeans(applicationContext);
-//        Person bean = applicationContext.getBean(Person.class);
-//        System.out.println(bean);
-
-//        String[] beanNamesForType = applicationContext.getBeanNamesForType(Person.class);
-//        for (String beanName : beanNamesForType) {
-//            System.out.println(beanName);
-//        }
-//
-//        System.out.println("====================");
-//        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
-//        for (String beanName : beanDefinitionNames) {
-//            System.out.println(beanName);
-//        }
-
-    }
 
     @Test
     public void test02() {
         System.out.println("ioc 容器创建完成。。。。。。");
         Person bean = applicationContext.getBean(Person.class);
-//        Person bean1 = applicationContext.getBean(Person.class);
+        Person bean1 = applicationContext.getBean(Person.class);
         System.out.println(bean);
-//        System.out.println(bean1);
-//        System.out.println(bean == bean1);
+        System.out.println(bean1);
+        System.out.println(bean == bean1);
+    }
+
+    @Test
+    public void test01() {
+
+        printBeans(applicationContext);
+        Person bean = applicationContext.getBean(Person.class);
+        System.out.println(bean);
+
+        String[] beanNamesForType = applicationContext.getBeanNamesForType(Person.class);
+        for (String beanName : beanNamesForType) {
+            System.out.println(beanName);
+        }
+
+        System.out.println("====================");
+        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
+        for (String beanName : beanDefinitionNames) {
+            System.out.println(beanName);
+        }
+
     }
 }

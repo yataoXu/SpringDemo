@@ -1,4 +1,4 @@
-package com.yatao.bean;
+package com.evan.bean;
 
 /**
  * @ Author : Evan.
