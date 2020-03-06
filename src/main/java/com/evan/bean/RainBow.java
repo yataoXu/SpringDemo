@@ -1,10 +1,10 @@
 package com.evan.bean;
 
 /**
- * @Description
- * @ClassName RainBow
- * @Author Evan
- * @date 2020.02.14 22:53
+ * @ Author : Evan.
+ * @ Description :
+ * @ Date : Crreate in 2019/4/16 11:01
+ * @Mail : xuyt@zendaimoney.com
  */
 public class RainBow {
 }

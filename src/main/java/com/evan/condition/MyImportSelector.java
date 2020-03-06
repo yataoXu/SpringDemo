@@ -3,16 +3,35 @@ package com.evan.condition;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.util.Iterator;
 import java.util.Set;
 
 
+// 自定义逻辑返回需要导入的组件
 public class MyImportSelector implements ImportSelector {
+
+    /**
+     *
+     * 返回值，就是要导入到容器中的组件的全类名
+     *
+     * @param annotationMetadata 当前标注 @import 注解的类的所有注解信息
+     * @return
+     */
     @Override
-    public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-        Set<String> annotationTypes = importingClassMetadata.getAnnotationTypes();
-        System.out.println("======MyImportSelector method start=======");
-        annotationTypes.stream().forEach(System.out::println);
-        System.out.println("======MyImportSelector method end=======");
-        return new String[]{"com.evan.bean.Black","com.evan.bean.Red"};
+    public String[] selectImports(AnnotationMetadata annotationMetadata) {
+        Set<String> annotationTypes = annotationMetadata.getAnnotationTypes();
+        System.out.println("=============");
+        for (String annotation : annotationTypes){
+            System.out.println(annotation);
+        }
+        System.out.println("=============");
+
+        Iterator<String> iterator = annotationTypes.iterator();
+        while(iterator.hasNext()){
+            String str = iterator.next();
+            System.out.println(str);
+        }
+        System.out.println("=============");
+        return new String[]{"com.evan.bean.Blue","com.evan.bean.Yellow"};
     }
 }

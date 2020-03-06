@@ -1,15 +1,10 @@
 package com.evan.bean;
 
-import lombok.Data;
-
 /**
- * @Description
- * @ClassName Blue
- * @Author Evan
- * @date 2020.02.14 22:24
+ * @ Author : Evan.
+ * @ Description :
+ * @ Date : Crreate in 2019/4/16 10:38
+ * @Mail : xuyt@zendaimoney.com
  */
-@Data
 public class Blue {
-
-    private String name ="123";
 }

@@ -21,6 +21,3 @@ public class BookDao {
         return "BookDao [lable=" + lable + "]";
     }
 }
-
-
-

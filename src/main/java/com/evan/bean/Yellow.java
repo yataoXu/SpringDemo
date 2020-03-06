@@ -1,10 +1,10 @@
 package com.evan.bean;
 
 /**
- * @Description
- * @ClassName Yellow
- * @Author Evan
- * @date 2020.02.14 22:25
+ * @ Author : Evan.
+ * @ Description :
+ * @ Date : Crreate in 2019/4/16 10:38
+ * @Mail : xuyt@zendaimoney.com
  */
 public class Yellow {
 }

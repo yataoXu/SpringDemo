@@ -1,9 +1,6 @@
 package com.evan.condition;
 
-
-import com.evan.bean.Blue;
 import com.evan.bean.RainBow;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -23,9 +20,9 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
 
-        boolean yellow = beanDefinitionRegistry.containsBeanDefinition("com.evan.bean.Yellow");
-
-        if (yellow ) {
+        boolean red = beanDefinitionRegistry.containsBeanDefinition("com.evan.bean.Red");
+        boolean blue = beanDefinitionRegistry.containsBeanDefinition("com.evan.bean.Blue");
+        if (red && blue) {
             // 指定被注册bean 的id名
             System.out.println("通过registerBeanDefinition()将RainBow 注入容器中");
             RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(RainBow.class);

@@ -3,8 +3,6 @@ package com.evan.config;
 import com.evan.bean.Car;
 import com.evan.bean.Color;
 import com.evan.dao.BookDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -70,12 +68,12 @@ public class MainConifgOfAutowired {
      * @param car
      * @return
      */
-//    @Bean
-//    public Color color(Car car){
-//        Color color = new Color();
-////        color.setCar(car);
-//        return color;
-//    }
+    @Bean
+    public Color color(Car car){
+        Color color = new Color();
+        color.setCar(car);
+        return color;
+    }
 
 
 }

@@ -1,13 +1,21 @@
 package com.evan.bean;
 
-import org.springframework.stereotype.Component;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+/**
+ * @ Author : Evan.
+ * @ Description :
+ * @ Date : Crreate in 2019/4/17 10:44
+ * @Mail : xuyt@zendaimoney.com
+ */
+@Service
+public class Dog {//implements ApplicationContextAware {
 
-@Component
-public class Dog {
+    private ApplicationContext applicationContext;
 
     public Dog(){
         System.out.println("dog constructor ....");
