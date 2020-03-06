@@ -2,7 +2,7 @@ package com.evan.config;
 
 import com.evan.condition.LinuxCondition;
 import com.evan.condition.WindowCondition;
-import com.yatao.bean.Person;
+import com.evan.bean.Person;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
 package com.evan.demo;
 
 import com.evan.config.MainConfig01;
-import com.yatao.bean.Person;
+import com.evan.bean.Person;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

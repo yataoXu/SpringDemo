@@ -1,6 +1,6 @@
 package com.evan.config;
 
-import com.yatao.bean.Person;
+import com.evan.bean.Person;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

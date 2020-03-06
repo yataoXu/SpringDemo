@@ -50,7 +50,7 @@ public class Person {
 ```java
 package com.evan.config;
 
-import com.yatao.bean.Person;
+import com.evan.bean.Person;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -70,7 +70,7 @@ public class MainConfig {
 package com.evan.demo;
 
 import com.evan.config.MainConfig;
-import com.yatao.bean.Person;
+import com.evan.bean.Person;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
