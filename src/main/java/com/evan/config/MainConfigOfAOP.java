@@ -2,7 +2,7 @@ package com.evan.config;
 
 
 
-import com.evan.controller.aop.LogAspects;
+import com.evan.aop.LogAspects;
 import com.evan.aop.MathCalculator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

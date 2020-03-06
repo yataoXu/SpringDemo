@@ -1,4 +1,4 @@
-package com.evan;
+package com.evan.springlearn;
 
 import com.evan.bean.Blue;
 import com.evan.bean.ColorFactoryBean;
