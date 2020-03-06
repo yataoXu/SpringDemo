@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 //包扫描、只要标注了@Controller、@Service、@Repository，@Component
 //<context:component-scan base-package="com.yatao" use-default-filters="false"></context:component-scan>
-//@ComponentScan
+@ComponentScan
 
 
 // excludeFilters =  Filter[] 排除那些组件
@@ -23,11 +23,11 @@ import org.springframework.stereotype.Service;
 
 // 配置只包含的过滤规则的时候需要屏蔽掉默认的过滤规则
 // includeFilters =  Filter[] 只包含 Filter 中的 组件，注意点就是要屏蔽掉spring默认的过滤规则
-@ComponentScan(value = "com.yatao",includeFilters = {
-        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Controller.class}),
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,classes = {BookService.class}),
-        @ComponentScan.Filter(type = FilterType.CUSTOM,classes = {MyTypeFilter.class})},
-        useDefaultFilters = false)
+//@ComponentScan(value = "com.yatao",includeFilters = {
+//        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Controller.class}),
+//        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,classes = {BookService.class}),
+//        @ComponentScan.Filter(type = FilterType.CUSTOM,classes = {MyTypeFilter.class})},
+//        useDefaultFilters = false)
 
 // jdk8 可以配置多个ComponentScan
 // FilterType.ANNOTATION 按照注解

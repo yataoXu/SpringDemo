@@ -1,4 +1,4 @@
-package com.yatao.condition;
+package com.evan.condition;
 
 
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-//判断是否是linux 系统
-public class LinuxCondition implements Condition {
+//判断是否是windows 系统
+public class WindowCondition implements Condition {
 
     /**
      * @param conditionContext      判断条件能使用的上下文环境
@@ -29,7 +29,7 @@ public class LinuxCondition implements Condition {
         BeanDefinitionRegistry registry = conditionContext.getRegistry();
 
         String property = environment.getProperty("os.name");
-        if (property.contains("Linux")) {
+        if (property.contains("Windows")) {
             return true;
         }
         return false;

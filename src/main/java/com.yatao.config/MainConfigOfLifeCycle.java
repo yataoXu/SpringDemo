@@ -1,6 +1,6 @@
 package com.yatao.config;
 
-import com.yatao.bean.Car;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -56,13 +56,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Configuration
-@ComponentScan(value = "com.yatao.bean",includeFilters = {
-        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Service.class})},
-        useDefaultFilters = false)
 public class MainConfigOfLifeCycle {
 
-    @Bean(initMethod = "init", destroyMethod = "distroy")
-    public Car car() {
-        return new Car();
-    }
+
 }

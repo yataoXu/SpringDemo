@@ -1,9 +1,10 @@
-package com.yatao.bean;
+package com.evan.service;
 
+import com.evan.bean.Color;
 import org.springframework.beans.factory.FactoryBean;
 
 
-// 创建一个sprig定义的FactoryBean
+// 创建一个spring定义的FactoryBean
 public class ColorFactoryBean implements FactoryBean {
 
     /**
@@ -15,7 +16,12 @@ public class ColorFactoryBean implements FactoryBean {
      */
     @Override
     public Color getObject() throws Exception {
-        return new Color();
+        System.out.println("ColorFactoryBean 的 getObject()方法被调用");
+        Color color = new Color();
+        color.setRed(100);
+        color.setGreen(100);
+        color.setBlack(20);
+        return color;
     }
 
     @Override

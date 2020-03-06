@@ -1,4 +1,4 @@
-package com.yatao.bean;
+package com.evan.bean;
 
 
 import org.springframework.beans.factory.DisposableBean;
@@ -18,9 +18,7 @@ public class Cat implements InitializingBean, DisposableBean {
     }
 
     /**
-     *
      * 对象创建完成，并赋值好，调用初始化方法
-     *
      * @throws Exception
      */
     @Override

@@ -1,8 +1,8 @@
-package com.yatao.config;
+package com.evan.config;
 
-import com.yatao.bean.Car;
-import com.yatao.bean.Color;
-import com.yatao.dao.BookDao;
+import com.evan.bean.Car;
+import com.evan.bean.Color;
+import com.evan.dao.BookDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -51,14 +51,10 @@ import org.springframework.context.annotation.Primary;
  * 		把Spring底层一些组件注入到自定义的Bean中；
  * 		xxxAware：功能使用xxxProcessor；
  * 			ApplicationContextAware==》ApplicationContextAwareProcessor；
- *
- *
- * @author lfy
- *
  */
 @Configuration
-@ComponentScan({"com.yatao.service","com.yatao.dao",
-        "com.yatao.controller","com.yatao.bean"})
+@ComponentScan({"com.evan.service","com.evan.dao",
+        "com.evan.controller","com.evan.bean"})
 public class MainConifgOfAutowired {
 
     @Primary
@@ -74,12 +70,12 @@ public class MainConifgOfAutowired {
      * @param car
      * @return
      */
-    @Bean
-    public Color color(Car car){
-        Color color = new Color();
-        color.setCar(car);
-        return color;
-    }
+//    @Bean
+//    public Color color(Car car){
+//        Color color = new Color();
+////        color.setCar(car);
+//        return color;
+//    }
 
 
 }

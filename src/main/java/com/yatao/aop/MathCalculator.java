@@ -6,6 +6,5 @@ public class MathCalculator {
         System.out.println("MathCalculator...div...");
         return i / j;
     }
-
 }
 

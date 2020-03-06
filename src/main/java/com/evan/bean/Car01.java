@@ -1,11 +1,11 @@
-package com.yatao.bean;
+package com.evan.bean;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class Car {
+public class Car01 {
 
-    public Car() {
+    public Car01() {
         System.out.println("car constructor ....");
     }
 

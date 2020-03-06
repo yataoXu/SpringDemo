@@ -20,9 +20,4 @@ public class BookDao {
     public String toString() {
         return "BookDao [lable=" + lable + "]";
     }
-
-
-
-
-
 }
