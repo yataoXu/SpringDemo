@@ -1,6 +1,6 @@
 package com.evan.service;
 
-import com.evan.bean.Color;
+import com.evan.bean.Colors;
 import org.springframework.beans.factory.FactoryBean;
 
 
@@ -15,12 +15,12 @@ public class ColorFactoryBean implements FactoryBean {
      * @throws Exception
      */
     @Override
-    public Color getObject() throws Exception {
+    public Colors getObject() throws Exception {
         System.out.println("ColorFactoryBean 的 getObject()方法被调用");
-        Color color = new Color();
+        Colors color = new Colors();
         color.setRed(100);
         color.setGreen(100);
-        color.setBlack(20);
+        color.setBlue(20);
         return color;
     }
 

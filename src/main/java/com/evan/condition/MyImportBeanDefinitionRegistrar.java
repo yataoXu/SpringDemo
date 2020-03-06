@@ -1,6 +1,8 @@
 package com.evan.condition;
 
+import com.evan.bean.Blue;
 import com.evan.bean.RainBow;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -28,9 +30,9 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
             RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(RainBow.class);
             beanDefinitionRegistry.registerBeanDefinition("rainBow", rootBeanDefinition);
 
-            BeanDefinitionBuilder blue  = BeanDefinitionBuilder.rootBeanDefinition(Blue.class);
-            blue.addPropertyValue("name","蓝色");
-            beanDefinitionRegistry.registerBeanDefinition("蓝色", blue.getBeanDefinition());
+            BeanDefinitionBuilder blue1  = BeanDefinitionBuilder.rootBeanDefinition(Blue.class);
+            blue1.addPropertyValue("name","蓝色");
+            beanDefinitionRegistry.registerBeanDefinition("蓝色", blue1.getBeanDefinition());
 
         }
     }
