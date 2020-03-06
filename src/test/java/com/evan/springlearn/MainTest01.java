@@ -76,6 +76,8 @@ public class MainTest01 {
     @Test
     public void test01() {
 
+
+        applicationContext.scan("com.evan.controller");
         printBeans(applicationContext);
         Person bean = applicationContext.getBean(Person.class);
         System.out.println(bean);
