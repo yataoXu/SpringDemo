@@ -1,7 +1,7 @@
 package com.evan.demo;
 
 import com.evan.config.MainConfig06;
-import com.evan.service.ColorFactoryBean;
+import com.evan.ext.ColorFactoryBean;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

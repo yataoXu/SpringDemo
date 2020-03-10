@@ -1,6 +1,6 @@
 package com.evan.config;
 
-import com.evan.service.ColorFactoryBean;
+import com.evan.ext.ColorFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

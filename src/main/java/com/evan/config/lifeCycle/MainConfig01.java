@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({Cat.class, Dog.class, MyBeanPostProcessor.class, UserDao.class})
+//@Import({Cat.class, Dog.class, MyBeanPostProcessor.class, UserDao.class})
 //@Import({UserDao.class})
 public class MainConfig01 {
     @Bean(initMethod = "init", destroyMethod = "distroy")
