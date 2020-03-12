@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 // 配置只包含的过滤规则的时候需要屏蔽掉默认的过滤规则
 // includeFilters =  Filter[] 只包含 Filter 中的 组件，注意点就是要屏蔽掉spring默认的过滤规则
-@ComponentScan(value = "com.evan.service")
+//@ComponentScan(value = "com.evan.bean")
 //        ,includeFilters = {
 //        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Service.class})},
 ////        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,classes = {BookService.class}),
@@ -38,7 +38,16 @@ public class MainConfig {
     // 给spring注入一个bean 类型为返回值类型 ID为方法名
     @Bean
     public Person person(){
+        System.out.println("person 方法执行");
         return new Person("lisi",20);
+    }
+
+    @Bean
+    public String name(Person person) {
+        System.out.println("name(Person person) 方法执行");
+        System.out.println(person.hashCode());
+        System.out.println("再次调用person()方法: " + person.hashCode());
+        return "123";
     }
 
 
