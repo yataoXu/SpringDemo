@@ -17,6 +17,12 @@ public class test {
 
 
     @Test
+    public void Test01(){
+        System.out.println(Byte.MAX_VALUE);
+        System.out.println(Byte.SIZE);
+    }
+
+    @Test
     public void testSingleLinkedList(){
         SingleLinkedList singleList = new SingleLinkedList();
         singleList.addHead("A");
