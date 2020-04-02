@@ -5,6 +5,38 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="createBeanProcess" class="com.evan.bean.CreateBeanProcess" />
+    <!--    <bean id="createBeanProcess" class="com.evan.bean.CreateBeanProcess" />-->
 
+
+<!--    <bean id="a" class="com.currentlyInCreationException.StudentA">-->
+<!--        <constructor-arg index="0" ref="b"></constructor-arg>-->
+<!--    </bean>-->
+<!--    <bean id="b" class="com.currentlyInCreationException.StudentB">-->
+<!--        <constructor-arg index="0" ref="c"></constructor-arg>-->
+<!--    </bean>-->
+<!--    <bean id="c" class="com.currentlyInCreationException.StudentC">-->
+<!--        <constructor-arg index="0" ref="a"></constructor-arg>-->
+<!--    </bean>-->
+
+
+<!--    <bean id="a" class="com.currentlyInCreationException.StudentA" scope="singleton">-->
+<!--        <property name="studentB" ref="b"></property>-->
+<!--    </bean>-->
+<!--    <bean id="b" class="com.currentlyInCreationException.StudentB" scope="singleton">-->
+<!--        <property name="studentC" ref="c"></property>-->
+<!--    </bean>-->
+<!--    <bean id="c" class="com.currentlyInCreationException.StudentC" scope="singleton">-->
+<!--        <property name="studentA" ref="a"></property>-->
+<!--    </bean>-->
+
+
+    <bean id="a" class="com.currentlyInCreationException.StudentA" scope="prototype">
+        <property name="studentB" ref="b"></property>
+    </bean>
+    <bean id="b" class="com.currentlyInCreationException.StudentB" scope="prototype">
+        <property name="studentC" ref="c"></property>
+    </bean>
+    <bean id="c" class="com.currentlyInCreationException.StudentC" scope="prototype">
+        <property name="studentA" ref="a"></property>
+    </bean>
 </beans>
