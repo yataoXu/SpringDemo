@@ -1,23 +1,19 @@
 package com.currentlyInCreationException;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @Description
  * @ClassName StudentB
  * @Author Evan
  * @date 2020.04.02 10:19
  */
-public class StudentB {
-    private StudentC studentC ;
+@Component
+public class StudentB{
 
-    public void setStudentC(StudentC studentC) {
-        this.studentC = studentC;
+    private StudentA studentA;
+
+    public void setStudentA(StudentA studentA) {
+        this.studentA = studentA;
     }
-
-    public StudentB() {
-    }
-
-    public StudentB(StudentC studentC) {
-        this.studentC = studentC;
-    }
-
 }
