@@ -1,4 +1,4 @@
-package com.evan.config;
+package com.evan.config.componentScan;
 
 
 import com.evan.filter.MyTypeFilter;

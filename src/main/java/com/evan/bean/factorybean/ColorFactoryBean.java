@@ -1,5 +1,6 @@
-package com.evan.bean;
+package com.evan.bean.factorybean;
 
+import com.evan.bean.Color;
 import org.springframework.beans.factory.FactoryBean;
 
 

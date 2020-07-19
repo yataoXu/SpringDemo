@@ -39,6 +39,7 @@ public class BlogServiceImpl implements BlogService {
 
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
     @Override
     public void update(Blog blog) {
 

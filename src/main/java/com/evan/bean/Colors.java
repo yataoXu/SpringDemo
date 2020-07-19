@@ -1,7 +1,5 @@
 package com.evan.bean;
 
-import java.net.DatagramPacket;
-
 import lombok.Data;
 
 /**

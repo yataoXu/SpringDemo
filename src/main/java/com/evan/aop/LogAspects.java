@@ -13,7 +13,7 @@ import org.aspectj.lang.annotation.Pointcut;
 /**
  * 切面类
  *
- * @author lfy
+ * @author Evan
  * @Aspect： 告诉Spring当前类是一个切面类
  */
 @Aspect
@@ -33,7 +33,7 @@ public class LogAspects {
         System.out.println("" + joinPoint.getSignature().getName() + "运行。。。@Before:参数列表是：{" + Arrays.asList(args) + "}");
     }
 
-    @After("com.evan.controller.aop.LogAspects.pointCut()")
+    @After("com.evan.aop.LogAspects.pointCut()")
     public void logEnd(JoinPoint joinPoint) {
         System.out.println("" + joinPoint.getSignature().getName() + "结束。。。@After");
     }

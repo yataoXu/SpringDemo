@@ -2009,8 +2009,6 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
 
     try {
         // Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-        // 事实上,这个方法的调用..算了,我新开个地址专门描述一下吧.. https://www.jianshu.com/p/8d42a8816cf5
-        // 只要记得.这里在默认配置下特定返回 null 就ok了
         Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
         if (bean != null) {
             return bean;
@@ -2022,7 +2020,7 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
     }
 
     try {
-        // 寻常的创建Bean
+        // 创建Bean
         Object beanInstance = doCreateBean(beanName, mbdToUse, args);
         if (logger.isTraceEnabled()) {
             logger.trace("Finished creating instance of bean '" + beanName + "'");
@@ -2040,7 +2038,7 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
     }
 }
 ```
-关于`InstantiationAwareBeanPostProcessor`这个东西,在本文不做阐述。自己搜下吧(其实看接口方法名称也能有个大概意思)。  
+
 
 接着分析最后的`doCreateBean(beanName, mbdToUse, args)`方法 (真正的创建Bean的地方)  
 ```

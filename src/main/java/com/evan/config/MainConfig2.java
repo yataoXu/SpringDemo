@@ -1,7 +1,7 @@
 package com.evan.config;
 
 import com.evan.bean.Color;
-import com.evan.bean.ColorFactoryBean;
+import com.evan.bean.factorybean.ColorFactoryBean;
 import com.evan.bean.Person;
 import com.evan.bean.Red;
 import com.evan.condition.LinuxCondition;
