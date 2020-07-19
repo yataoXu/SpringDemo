@@ -1,36 +1,45 @@
-@Slf4j
-@ControllerAdvice
-public class ExceptionHandlerBean extends ResponseEntityExceptionHandler {
+package com.evan.tx.service;
 
-    /**
-     * 数据找不到异常
-     *
-     * @param ex
-     * @param request
-     * @return
-     * @throws IOException
-     */
-    @ExceptionHandler({DataNotFoundException.class})
-    public ResponseEntity<Object> handleDataNotFoundException(RuntimeException ex, WebRequest request) throws IOException {
-        return getResponseEntity(ex, request, ReturnStatusCode.DataNotFoundException);
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+/**
+ * @Description
+ * @ClassName ServiceB
+ * @Author Evan
+ * @date 2020.07.19 17:26
+ */
+@Service
+public class ServiceB {
+    @Autowired
+    private DataSource dataSource;
+
+    // 用于控制是否模拟insert方法挂了的情况。
+    private boolean flag = true;
+
+    @Transactional
+    public void insert() {
+        executeSql("insert into t select '这里是ServiceB挂之前'");
+
+        if (true) {
+            throw new RuntimeException("模拟内层事务某条语句挂了的情况");
+        }
+
+        executeSql("insert into t select '这里是ServiceB挂之后'");
     }
 
-    /**
-     * 根据各种异常构建 ResponseEntity  服务于以上各种异常
-     *
-     * @param ex
-     * @param request
-     * @param specificException
-     * @return
-     */
-    private ResponseEntity<Object> getResponseEntity(RuntimeException ex, WebRequest request, ReturnStatusCode specificException) {
-
-        ReturnTemplate returnTemplate = new ReturnTemplate();
-        returnTemplate.setStatusCode(specificException);
-        returnTemplate.setErrorMsg(ex.getMessage());
-
-        return handleExceptionInternal(ex, returnTemplate,
-                new HttpHeaders(), HttpStatus.OK, request);
+    private void executeSql(String sql) {
+        Connection connection = DataSourceUtils.getConnection(dataSource);
+        try {
+            connection.createStatement().execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }
